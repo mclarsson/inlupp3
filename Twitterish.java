@@ -130,7 +130,7 @@ public class Twitterish {
 
             System.out.println("Unfriended " + friend.getName());
         }
-        
+
         private void ignoreFriend() {
             if (this.loggedInUser.hasFriends() == false) {
                 System.out.println("You don't have anyone to ignore. Try to make a few friends first.");
@@ -148,6 +148,25 @@ public class Twitterish {
             this.loggedInUser.ignoreFriend(friend);
 
             System.out.println("Ignored " + friend.getName());
+        }
+
+	private void unIgnoreFriend() {
+            if (this.loggedInUser.hasIgnoredFriends() == false) {
+                System.out.println("You're not ignoring anyone.");
+                return;
+            }
+
+            System.out.println("Who to unignore?");
+            Account[] friends = this.loggedInUser.getIgnoredFriends();
+            this.printEnumeratedChoices(friends);
+
+            String choiceString = System.console().readLine();
+            int choice = Integer.parseInt(choiceString);
+            Account friend = friends[choice];
+
+            this.loggedInUser.unIgnoreFriend(friend);
+
+            System.out.println("Unignored " + friend.getName());
         }
 
         private void quit() {
@@ -251,6 +270,7 @@ public class Twitterish {
             System.out.print("[R]emove friend    |  ");
             System.out.println();
             System.out.print("[I]gnore friend    |  ");
+	    System.out.print("U[n]ignore friend  |  ");
             System.out.print("[L]ist friends     |  ");
             System.out.print("[E]dit account     |  ");
             System.out.print("[Q]uit");
@@ -278,6 +298,9 @@ public class Twitterish {
                 return true;
             case 'i':
                 this.ignoreFriend();
+                return true;
+	    case 'n':
+                this.unIgnoreFriend();
                 return true;
             case 'e':
                 this.editAccount();

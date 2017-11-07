@@ -71,8 +71,16 @@ public class Account implements Serializable, Comparable<Account> {
         return this.friends.size() > 0;
     }
 
+    public boolean hasIgnoredFriends() {
+        return this.ignoredFriends.size() > 0;
+    }
+
     public Account[] getFriends() {
         return (Account[]) this.friends.toArray(new Account[0]);
+    }
+
+    public Account[] getIgnoredFriends() {
+        return (Account[]) this.ignoredFriends.toArray(new Account[0]);
     }
 
     public boolean equals(Object o) {
