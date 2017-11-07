@@ -204,11 +204,26 @@ public class Twitterish {
         private void syncWithServer() {
             this.sendMessage(new SyncRequest());
             Object o = this.receiveMessage();
+	    
             if (o instanceof SyncResponse) {
-                this.knownUsers.addAll(((SyncResponse) o).getUsers());
-                // TODO
-                // Go through all known users on this side of the fence
-                // and update them if their name has changed
+		
+		Set<Account> newUsers = new TreeSet<Account>();
+		
+		for (Account syncUser : (((SyncResponse) o).getUsers())) {
+		    boolean userAlreadyKnown = false;
+		    for (Account knownUser : this.knownUsers) {
+			if (syncUser.getUserId().equals(knownUser.getUserId())) {
+			    knownUser.setName(syncUser.getName());
+			    userAlreadyKnown = true;
+			}
+		    }
+
+		    if (!userAlreadyKnown) {
+			newUsers.add(syncUser);
+		    }
+		}
+
+		this.knownUsers.addAll(newUsers);
 
                 // TODO
                 // Only print the posts that I am interested in
