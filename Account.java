@@ -3,6 +3,7 @@ import java.util.TreeSet;
 import java.io.Serializable;
 
 public class Account implements Serializable, Comparable<Account> {
+    private int postsAtLastSync;
     private String name;
     private String password;
     private String userId;
@@ -37,6 +38,14 @@ public class Account implements Serializable, Comparable<Account> {
     }
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getPostAtLastSync() {
+	return this.postsAtLastSync;
+    }
+
+    public void setPostAtLastSync(int posts) {
+	this.postsAtLastSync = posts;
     }
 
     public void addFriend(Account a) {

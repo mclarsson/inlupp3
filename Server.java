@@ -51,6 +51,21 @@ public class Server {
         return new ArrayList<Post>(this.posts);
     }
 
+    public synchronized List<Post> getNewPosts(Account account) {
+	int since = account.getPostAtLastSync();
+	account.setPostAtLastSync(this.posts.size());
+
+	return new ArrayList<Post>(this.posts.subList(since, this.posts.size()));
+    }
+
+    public synchronized List<Post> getNewFriendPosts(Account account) {
+	for (Post p : this.getNewPosts(account)) {
+	    if (account.isFriendsWith(p.getPoster())) result.add(p);
+	}
+
+	return result;
+    }
+
     public synchronized void addPost(Post p) {
         this.posts.add(p);
     }
@@ -136,7 +151,7 @@ public class Server {
                 System.out.println("<< SyncResponse");
                 this.outgoing.
                 writeObject(new SyncResponse(new HashSet<Account>(this.server.getAccounts()),
-                                             new LinkedList<Post>(this.server.getPosts())));
+                                             new LinkedList<Post>(this.server.getNewFriendPosts(this.account))));
                 this.outgoing.flush();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
