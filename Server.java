@@ -59,6 +59,8 @@ public class Server {
     }
 
     public synchronized List<Post> getNewFriendPosts(Account account) {
+	ArrayList<Post> result = new ArrayList<Post>();
+
 	for (Post p : this.getNewPosts(account)) {
 	    if (account.isFriendsWith(p.getPoster())) result.add(p);
 	}
