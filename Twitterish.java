@@ -209,11 +209,11 @@ public class Twitterish {
         private void syncWithServer() {
             this.sendMessage(new SyncRequest());
             Object o = this.receiveMessage();
-	    
+
             if (o instanceof SyncResponse) {
-		
+
 		Set<Account> newUsers = new TreeSet<Account>();
-		
+
 		for (Account syncUser : (((SyncResponse) o).getUsers())) {
 		    boolean userAlreadyKnown = false;
 		    for (Account knownUser : this.knownUsers) {
@@ -246,7 +246,7 @@ public class Twitterish {
         }
 
 	private void updateFeed() {
-	    String o = feed.renderAll();
+	    String o = feed.renderAll(this.loggedInUser);
 	    System.out.println(o);
 	}
 
