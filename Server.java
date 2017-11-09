@@ -4,6 +4,7 @@ import java.net.*;
 
 public class Server {
     private Set<Account> knownUsers = new TreeSet<Account>();
+    private Set<Login> knownLogins = new TreeSet<Login>();
     private List<Post> posts = new LinkedList<Post>();
 
     public static void main(String[] args) {
@@ -35,12 +36,27 @@ public class Server {
         return null;
     }
 
+    public Login getLoginFor(String userId) {
+	for (Login l : this.knownLogins){
+	    if (l.getAccount().getUserId().equals(userId)) return l;}
+
+	return null;
+    }
+
     public synchronized void addAccount(Account a) {
         this.knownUsers.add(a);
     }
 
+    public synchronized void addLogin(Login l) {
+	this.knownLogins.add(l);
+    }
+
     public synchronized void removeAccount(Account a) {
         this.knownUsers.remove(a);
+    }
+
+    public synchronized void removeLogin(Login l) {
+	this.knownLogins.remove(l);
     }
 
     public synchronized Set<Account> getAccounts() {
@@ -93,16 +109,20 @@ public class Server {
         public static void attemptEstablishConnection(Socket socket, Server server) throws IOException, ClassNotFoundException {
             ObjectInputStream incoming = new ObjectInputStream(socket.getInputStream());
             Object handShake = incoming.readObject();
-
+	    
             if (handShake instanceof Login) {
                 Account account = ((Login) handShake).getAccount();
                 Account knownAccount = server.getAccountFor(account.getUserId());
-
+		String password = ((Login) handShake).getPassword();
+		
                 if (knownAccount == null) {
                     server.addAccount(account);
+		    server.addLogin(new Login(account, password));
                     new ClientProxy(account, socket, server, incoming).start();
                 } else {
-                    if (knownAccount.getPassword().equals(account.getPassword()) == false) throw new RuntimeException("Wrong password");
+		    String knownPassword = server.getLoginFor(account.getUserId()).getPassword();
+
+                    if (knownPassword.equals(password) == false) throw new RuntimeException("Wrong password");
                     new ClientProxy(knownAccount, socket, server, incoming).start();
                 }
             } else {
@@ -143,9 +163,27 @@ public class Server {
             a.removeFriend(this.account);
         }
 
-        private void updateAccount(Account old, Account neu) {
+	private void validatePassword(Login login) {
+            try {
+                System.out.println("<< ValidationResponse");
+		Login validLogin = server.getLoginFor(login.getAccount().getUserId());
+
+		if (login.equals(validLogin) && login.getPassword().equals(validLogin.getPassword())){
+		    this.outgoing.writeObject(true);
+		} else {
+		    this.outgoing.writeObject(false);
+		}
+                this.outgoing.flush();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+	}
+
+        private void updateAccount(Account old, Login neu) {
             server.removeAccount(old);
-            server.addAccount(neu);
+	    server.removeLogin(server.getLoginFor(old.getUserId()));
+            server.addAccount(neu.getAccount());
+	    server.addLogin(neu);
         }
 
         private void sync() {
@@ -167,9 +205,11 @@ public class Server {
                     System.err.println(">> Received: " + o.getClass().getName());
                     // o instanceof Account checks if o is an account
                     // (Account) o type casts o into an Account so that it can be used as one
-                    if (o instanceof Account) {
-                        this.updateAccount(this.account, (Account) o);
-                    } else if (o instanceof PostMessage) {
+                    if (o instanceof Login) {
+                        this.updateAccount(this.account, (Login) o);
+                    } else if (o instanceof ValidatePassword) {
+			this.validatePassword(((ValidatePassword) o).getLogin());
+		    } else if (o instanceof PostMessage) {
                         this.postMessage(((PostMessage) o).getMsg());
                     } else if (o instanceof AddFriend) {
                         this.addFriend(((AddFriend) o).getFriend());
