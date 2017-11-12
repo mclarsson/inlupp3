@@ -139,6 +139,7 @@ public class Server {
         }
 
         private void logout(Account a) {
+	    this.server.removeLogin(a.getUserId());
             this.server.removeAccount(a);
             System.out.println("!! " + a.getUserId() + " left the building");
             try {
