@@ -21,7 +21,7 @@ public class Twitterish {
     private static class Client {
         private Account loggedInUser;
         private Set<Account> knownUsers = new TreeSet<Account>();
-        private Feed feed;
+	private Feed feed = new Feed();
 
         private ObjectOutputStream out;
         private ObjectInputStream in;
@@ -235,7 +235,6 @@ public class Twitterish {
 
                 // TODO
                 // Use the feed object for this
-		feed = new Feed();
                 for (Post p : ((SyncResponse) o).getPosts()) {
 		    feed.addPost(p);
 		}
