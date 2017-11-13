@@ -178,7 +178,12 @@ public class Twitterish {
             System.out.print("Enter your password: ");
             String password = new String(System.console().readPassword());
 
-            if (password.equals(this.loggedInUser.getPassword())) {
+	    
+            System.out.println("Validating password...");
+	    this.sendMessage(new ValidatePassword(new Login(this.loggedInUser, password)));
+            boolean validPassword = (Boolean) receiveMessage();
+	    
+            if (validPassword) {
                 System.out.print("Update your password: ");
                 password = new String(System.console().readPassword());
 
@@ -186,7 +191,7 @@ public class Twitterish {
                 String name = System.console().readLine();
 
                 String userid = this.loggedInUser.getUserId();
-                this.sendMessage(new Account(userid, password, name));
+		this.sendMessage(new Login(new Account(userid, name), password));
             } else {
                 System.out.println("Wrong password!");
             }
@@ -204,11 +209,11 @@ public class Twitterish {
         private void syncWithServer() {
             this.sendMessage(new SyncRequest());
             Object o = this.receiveMessage();
-	    
+
             if (o instanceof SyncResponse) {
-		
+
 		Set<Account> newUsers = new TreeSet<Account>();
-		
+
 		for (Account syncUser : (((SyncResponse) o).getUsers())) {
 		    boolean userAlreadyKnown = false;
 		    for (Account knownUser : this.knownUsers) {
@@ -241,7 +246,7 @@ public class Twitterish {
         }
 
 	private void updateFeed() {
-	    String o = feed.renderAll();
+	    String o = feed.renderAll(this.loggedInUser);
 	    System.out.println(o);
 	}
 
@@ -264,7 +269,7 @@ public class Twitterish {
             assert(name.length() > 0);
 
             System.out.println("Logging in new user " + userid + "...");
-            outgoing.writeObject(new Login(new Account(userid, password, name)));
+            outgoing.writeObject(new Login(new Account(userid, name), password));
 
             this.outgoing = outgoing;
             incoming = new ObjectInputStream(socket.getInputStream());
