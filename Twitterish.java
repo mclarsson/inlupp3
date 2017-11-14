@@ -2,6 +2,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Main class for client.
+ */
 public class Twitterish {
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -30,6 +33,12 @@ public class Twitterish {
         private String myIp;
         private int port;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param serverIp IP adress of server.
+	 * @param port Which port to connect to server through.
+	 */
         public Client(String serverIp, int port) {
             this.serverIp = serverIp;
             this.port = port;
@@ -178,11 +187,11 @@ public class Twitterish {
             System.out.print("Enter your password: ");
             String password = new String(System.console().readPassword());
 
-	    
+
             System.out.println("Validating password...");
 	    this.sendMessage(new ValidatePassword(new Login(this.loggedInUser, password)));
             boolean validPassword = (Boolean) receiveMessage();
-	    
+
             if (validPassword) {
                 System.out.print("Update your password: ");
                 password = new String(System.console().readPassword());
@@ -347,6 +356,9 @@ public class Twitterish {
             return true;
         }
 
+	/**
+	 * Starts up the client, continuing until commanded to stop.
+	 */
         public void start() throws IOException, UnknownHostException {
             this.displaySplashScreen();
             this.loginOrCreateUser();
