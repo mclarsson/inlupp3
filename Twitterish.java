@@ -235,10 +235,7 @@ public class Twitterish {
 
                 // TODO
                 // Use the feed object for this
-<<<<<<< HEAD
-=======
-		
->>>>>>> 31dc5b97c7f1bca60e689bc06b9090c4c5cb31ea
+
                 for (Post p : ((SyncResponse) o).getPosts()) {
 		    feed.addPost(p);
 		}
