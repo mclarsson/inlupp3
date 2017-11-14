@@ -1,12 +1,12 @@
 /**
- * @version %I%, %G%
- * 
- * An association between an {@link Account} and 
- * its password. It is used both in {@link Server}
+ * An association between an Account and 
+ * its password. It is used both in Server
  * to keep track of the valid passwords of different
- * accounts, and as a message sent by {@link Client} 
- * to notify the {@link ClientProxy} that a user is 
+ * accounts, and as a message sent by Client 
+ * to notify the Client Proxy that a user is 
  * attempting to log in.
+ *
+ * @version %I%, %G%
  */
 
 public class Login implements java.io.Serializable, Comparable<Login> {

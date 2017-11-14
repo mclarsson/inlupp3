@@ -3,16 +3,17 @@ import java.util.TreeSet;
 import java.io.Serializable;
 
 /**
- * @version %I%, %G%
  * 
  * An account containing information about the user. 
- * Instances of the class can be found in {@link Client}
- * and {@link ClientProxy}, where it is used to represent 
+ * Instances of the class can be found in Client
+ * and Client Proxy, where it is used to represent 
  * the currently logged in user. A list of accounts can 
- * also be found in Client and {@link Server}, to show which 
+ * also be found in Client and Server, to show which 
  * accounts are known. Since accounts are passed between 
  * the server and the client, the password is stored 
  * elsewhere to ensure security.
+ *
+ * @version %I%, %G%
  */
 
 public class Account implements Serializable, Comparable<Account> {

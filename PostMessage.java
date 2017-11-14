@@ -1,12 +1,12 @@
 import java.io.Serializable;
 
 /**
- * @version %I%, %G%
- * 
- * A message used by a {@link Client} to notify the 
- * {@link ClientProxy} that the logged in user has  
+ * A message used by a Client to notify the 
+ * Client Proxy that the logged in user has  
  * made a new post. The class stores the message and 
  * provides a method for getting a reference to it.
+ *
+ * @version %I%, %G%
  */
 
 public class PostMessage implements Serializable {

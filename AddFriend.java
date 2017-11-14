@@ -1,13 +1,13 @@
 import java.io.Serializable;
 
 /**
- * @version %I%, %G%
- * 
- * A message used by a {@link Client} to notify the 
- * {@link ClientProxy} that the logged in user has  
+ * A message used by a Client to notify the 
+ * Client Proxy that the logged in user has  
  * added a friend. The message stores the added  
  * friend's account upon instantiation and provides 
  * a method for the server to get said account.
+ *
+ * @version %I%, %G%
  */
 
 public class AddFriend implements Serializable {

@@ -3,13 +3,13 @@ import java.util.Set;
 import java.util.List;
 
 /**
- * @version %I%, %G%
- * 
- * A message used by the {@link ClientProxy} to provide
- * the {@link Client} with the data requested by the Client
- * with a {@link SyncRequest}. The message stores a list of
+ * A message used by the Client Proxy to provide
+ * the Client with the data requested by the Client
+ * with a SyncRequest. The message stores a list of
  * users and posts that can be extracted via provided methods
  * by the Client.
+ *
+ * @version %I%, %G%
  */
 
 public class SyncResponse implements Serializable {

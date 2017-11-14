@@ -1,12 +1,12 @@
 /**
- * @version %I%, %G%
- * 
- * A message used by a {@link Client} to notify the 
- * {@link ClientProxy} that it wishes to validate a 
- * password. The message contains a {@link Login}, 
- * which can be used by the ClientProxy to verify 
- * that the equivalent Login on the {@link Server} 
+ * A message used by a Client to notify the 
+ * Client Proxy that it wishes to validate a 
+ * password. The message contains a Login, 
+ * which can be used by the Client Proxy to verify 
+ * that the equivalent Login on the Server 
  * contains the same password as the one provided.
+ *
+ * @version %I%, %G%
  */
 
 public class ValidatePassword implements java.io.Serializable {

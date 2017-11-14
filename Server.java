@@ -2,16 +2,14 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-
 /**
- * @version %I%, %G%
- * 
  * The backend of the server system. It contains
  * the data that is to be persistent for all 
- * {@link ClientProxy} instances, i.e. the users 
+ * Client Proxy instances, i.e. the users 
  * known by the server, the logins and the posts.
+ *
+ * @version %H%, %I%
  */
-
 public class Server {
     private Set<Account> knownUsers = new TreeSet<Account>();
     private Set<Login> knownLogins = new TreeSet<Login>();
