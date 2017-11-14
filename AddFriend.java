@@ -5,9 +5,9 @@ import java.io.Serializable;
  * 
  * A message used by a {@link Client} to notify the 
  * {@link ClientProxy} that the logged in user has  
- * added a friend. The class simply stores the added  
+ * added a friend. The message stores the added  
  * friend's account upon instantiation and provides 
- * a method fir the server to get said account.
+ * a method for the server to get said account.
  */
 
 public class AddFriend implements Serializable {
