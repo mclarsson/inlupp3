@@ -4,8 +4,8 @@ import java.net.*;
 
 /**
  * The backend of the server system. It contains
- * the data that is to be persistent for all 
- * Client Proxy instances, i.e. the users 
+ * the data that is to be persistent for all
+ * Client Proxy instances, i.e. the users
  * known by the server, the logins and the posts.
  *
  * @version %H%, %I%
@@ -21,7 +21,7 @@ public class Server {
      * and begin listening for connections.
      *
      * @param args the port for the socket will be specified
-     * at the first of the arguments, defaults to 8080 if 
+     * at the first of the arguments, defaults to 8080 if
      * there are none
      */
     public static void main(String[] args) {
@@ -135,7 +135,7 @@ public class Server {
      */
     public synchronized List<Post> getNewFriendPosts(Account account) {
 	List<Post> result = new ArrayList<Post>();
-        
+
 	for (Post p : this.getNewPosts(account)) {
 	    if (account.isFriendsWith(p.getPoster())) result.add(p);
 	}
@@ -186,12 +186,12 @@ public class Server {
         public static void attemptEstablishConnection(Socket socket, Server server) throws IOException, ClassNotFoundException {
             ObjectInputStream incoming = new ObjectInputStream(socket.getInputStream());
             Object handShake = incoming.readObject();
-	    
+
             if (handShake instanceof Login) {
                 Account account = ((Login) handShake).getAccount();
                 Account knownAccount = server.getAccountFor(account.getUserId());
 		String password = ((Login) handShake).getPassword();
-		
+
                 if (knownAccount == null) {
                     server.addAccount(account);
 		    server.addLogin(new Login(account, password));
@@ -216,7 +216,8 @@ public class Server {
         }
 
         private void logout(Account a) {
-	    this.server.removeLogin(a.getUserId());
+	    Login currentLogin = this.server.getLoginFor(a.getUserId());
+	    this.server.removeLogin(currentLogin);
             this.server.removeAccount(a);
             System.out.println("!! " + a.getUserId() + " left the building");
             try {
