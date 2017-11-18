@@ -90,6 +90,7 @@ public class Twitterish {
             }
         }
 
+
         private Account chooseFriend(Account[] knownUsers){
             printEnumeratedChoices(knownUsers);
             String choiceString = System.console().readLine();
