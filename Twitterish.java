@@ -90,14 +90,21 @@ public class Twitterish {
             }
         }
 
-
         private Account chooseFriend(Account[] knownUsers){
             printEnumeratedChoices(knownUsers);
             String choiceString = System.console().readLine();
-            int choice = Integer.parseInt(choiceString);
-            Account friend = knownUsers[choice];
-            return friend;
+            
+            while (true) {
+                try {
+                    int choice = Integer.parseInt(choiceString);
+                    if (choice >= 0 && choice < knownUsers.length) return knownUsers[choice];
+                } catch (NumberFormatException e) {}
+                
+                System.out.println("Invalid input \'" + choiceString + "\'");
+                choiceString = System.console().readLine();
+            }
         }
+        
         private void addFriend() {
             if (this.knownUsers.size() == 0) {
                 System.out.println("You seem to be alone in the universe, at this moment.");
