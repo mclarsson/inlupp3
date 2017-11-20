@@ -18,9 +18,6 @@ public class Twitterish {
             }
         }
     }
-
-    // This is a nested class, we will go into this later in the course.
-    // For now, think of this as a class which is only usable by the Server.
     private static class Client {
         private Account loggedInUser;
         private Set<Account> knownUsers = new TreeSet<Account>();
@@ -56,9 +53,6 @@ public class Twitterish {
                 // Ignore post
             }
         }
-
-        // This is the code that sends a message to the server.
-        // You should not need to touch this code.
         private void sendMessage(Object o) {
             try {
                 this.outgoing.writeObject(o);
@@ -67,13 +61,11 @@ public class Twitterish {
                 ioe.printStackTrace();
             }
         }
-
-        // This is the code that receives a message to the server.
-        // You should not need to touch this code.
         private Object receiveMessage() {
             try {
                 Object o = this.incoming.readObject();
-                System.out.printf("Received %s message\n",  o == null ? "<null>" : o.getClass().toString());
+                String s = o == null ? "<null>" : o.getClass().toString();
+                System.out.printf("Received %s message\n",  s);
                 return o;
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -98,6 +90,22 @@ public class Twitterish {
             }
         }
 
+        private Account chooseAccount(Account[] knownUsers){
+            printEnumeratedChoices(knownUsers);
+            String choiceString;
+            
+            while (true) {
+	        choiceString = System.console().readLine();
+
+                try {
+                    int choice = Integer.parseInt(choiceString);
+                    if (choice >= 0 && choice < knownUsers.length) return knownUsers[choice];
+                } catch (NumberFormatException e) {
+		    System.out.println("Invalid input \'" + choiceString + "\'");
+		}
+            }
+        }
+        
         private void addFriend() {
             if (this.knownUsers.size() == 0) {
                 System.out.println("You seem to be alone in the universe, at this moment.");
@@ -108,11 +116,9 @@ public class Twitterish {
 
             Account[] knownUsers = (Account[]) this.knownUsers.toArray(new Account[0]);
             Arrays.sort(knownUsers);
-            printEnumeratedChoices(knownUsers);
 
-            String choiceString = System.console().readLine();
-            int choice = Integer.parseInt(choiceString);
-            Account friend = knownUsers[choice];
+
+            Account friend = chooseAccount(knownUsers);
 
             sendMessage(new AddFriend(friend));
             this.loggedInUser.addFriend(friend);
@@ -128,11 +134,8 @@ public class Twitterish {
 
             System.out.println("Who to unfriend?");
             Account[] friends = this.loggedInUser.getFriends();
-            this.printEnumeratedChoices(friends);
 
-            String choiceString = System.console().readLine();
-            int choice = Integer.parseInt(choiceString);
-            Account friend = friends[choice];
+            Account friend = chooseAccount(friends);
 
             sendMessage(new RemoveFriend(friend));
             this.loggedInUser.removeFriend(friend);
@@ -148,11 +151,8 @@ public class Twitterish {
 
             System.out.println("Who to ignore?");
             Account[] friends = this.loggedInUser.getFriends();
-            this.printEnumeratedChoices(friends);
 
-            String choiceString = System.console().readLine();
-            int choice = Integer.parseInt(choiceString);
-            Account friend = friends[choice];
+            Account friend = chooseAccount(friends);
 
             this.loggedInUser.ignoreFriend(friend);
 
@@ -167,11 +167,8 @@ public class Twitterish {
 
             System.out.println("Who to unignore?");
             Account[] friends = this.loggedInUser.getIgnoredFriends();
-            this.printEnumeratedChoices(friends);
 
-            String choiceString = System.console().readLine();
-            int choice = Integer.parseInt(choiceString);
-            Account friend = friends[choice];
+            Account friend = chooseAccount(friends);
 
             this.loggedInUser.unIgnoreFriend(friend);
 
