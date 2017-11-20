@@ -90,18 +90,19 @@ public class Twitterish {
             }
         }
 
-        private Account chooseFriend(Account[] knownUsers){
+        private Account chooseAccount(Account[] knownUsers){
             printEnumeratedChoices(knownUsers);
-            String choiceString = System.console().readLine();
+            String choiceString;
             
             while (true) {
+	        choiceString = System.console().readLine();
+
                 try {
                     int choice = Integer.parseInt(choiceString);
                     if (choice >= 0 && choice < knownUsers.length) return knownUsers[choice];
-                } catch (NumberFormatException e) {}
-                
-                System.out.println("Invalid input \'" + choiceString + "\'");
-                choiceString = System.console().readLine();
+                } catch (NumberFormatException e) {
+		    System.out.println("Invalid input \'" + choiceString + "\'");
+		}
             }
         }
         
@@ -117,7 +118,7 @@ public class Twitterish {
             Arrays.sort(knownUsers);
 
 
-            Account friend = chooseFriend(knownUsers);
+            Account friend = chooseAccount(knownUsers);
 
             sendMessage(new AddFriend(friend));
             this.loggedInUser.addFriend(friend);
@@ -134,7 +135,7 @@ public class Twitterish {
             System.out.println("Who to unfriend?");
             Account[] friends = this.loggedInUser.getFriends();
 
-            Account friend = chooseFriend(friends);
+            Account friend = chooseAccount(friends);
 
             sendMessage(new RemoveFriend(friend));
             this.loggedInUser.removeFriend(friend);
@@ -151,7 +152,7 @@ public class Twitterish {
             System.out.println("Who to ignore?");
             Account[] friends = this.loggedInUser.getFriends();
 
-            Account friend = chooseFriend(friends);
+            Account friend = chooseAccount(friends);
 
             this.loggedInUser.ignoreFriend(friend);
 
@@ -167,7 +168,7 @@ public class Twitterish {
             System.out.println("Who to unignore?");
             Account[] friends = this.loggedInUser.getIgnoredFriends();
 
-            Account friend = chooseFriend(friends);
+            Account friend = chooseAccount(friends);
 
             this.loggedInUser.unIgnoreFriend(friend);
 
